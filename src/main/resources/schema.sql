@@ -1,4 +1,4 @@
-create table IF NOT EXISTS oauth_client_details (
+create table oauth_client_details (
   client_id VARCHAR(256) PRIMARY KEY,
   resource_ids VARCHAR(256),
   client_secret VARCHAR(256),
