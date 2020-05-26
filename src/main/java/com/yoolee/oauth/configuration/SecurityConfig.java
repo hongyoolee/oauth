@@ -1,5 +1,7 @@
 package com.yoolee.oauth.configuration;
 
+import com.yoolee.oauth.provider.CustomAuthenticationProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -14,17 +16,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Bean
-    public PasswordEncoder noOppasswordEncoder(){
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
+    @Autowired
+    CustomAuthenticationProvider customAuthenticationProvider;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                .withUser("yoolee")
-                .password("{noop}yoolee") // 비밀 번호 암호화 안할시 앞에 {noop} 라는 저장 형식 값을 넣어 줘야함 보통은 암호화 형식값임 ex) {sha256}passwordValue (Spring Security 5.0 부터 적용)
-                .roles("ROLE");
+        auth.authenticationProvider(customAuthenticationProvider);
     }
 
     @Override
@@ -36,4 +33,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .httpBasic();
     }
+
 }
