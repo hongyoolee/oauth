@@ -8,8 +8,10 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
@@ -32,6 +34,10 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         String password = (String) authentication.getCredentials();
 
         User user = userJpaRepo.findByUid(username);
+
+        if(ObjectUtils.isEmpty(user)){
+            throw new UsernameNotFoundException("user not found");
+        }
 
         if(!passwordEncoder.matches(password,user.getPassword())){
             throw new BadCredentialsException("password is not vaild");

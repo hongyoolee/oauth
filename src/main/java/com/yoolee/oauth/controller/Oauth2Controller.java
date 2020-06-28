@@ -21,10 +21,31 @@ public class Oauth2Controller {
                 Base64.encodeBase64(cridentials.getBytes())
         );
         String requestCode = code;
-        OauthToken.request request = new OauthToken.request(){{
+        OauthToken.request.accessToken request = new OauthToken.request.accessToken(){{
             setCode(requestCode);
             setGrant_type("authorization_code");
-            setRedirect_uri("http://localhost:8081/oauth2/callback");
+            setRedirect_uri("http://localhost:8089/oauth2/callback");
+        }};
+        OauthToken.response oauthToken = Unirest.post("http://localhost:8089/oauth/token")
+                .header("Authorization","Basic "+encodingCredentials)
+                .fields(request.getMapData())
+                .asObject(OauthToken.response.class).getBody();
+
+        return oauthToken;
+    }
+
+    @GetMapping("/refresh")
+    public OauthToken.response refresh(@RequestParam String refreshToken){
+
+        String cridentials = "testClientId:testSecret";
+        // base 64로 암호화
+        String encodingCredentials = new String(
+                Base64.encodeBase64(cridentials.getBytes())
+        );
+
+        OauthToken.request.refrashToken request = new OauthToken.request.refrashToken(){{
+            setRefreshToken(refreshToken);
+            setGrant_type("refresh_token");
         }};
         OauthToken.response oauthToken = Unirest.post("http://localhost:8081/oauth/token")
                 .header("Authorization","Basic "+encodingCredentials)

@@ -24,17 +24,36 @@ public class OauthToken {
     @Data
     public static class request{
 
-        public String code;
-        private String grant_type;
-        private String redirect_uri;
+        @Data
+        public static class accessToken{
+            public String code;
+            private String grant_type;
+            private String redirect_uri;
 
-        public Map getMapData(){
-            Map map = new HashMap();
-            map.put("code",code);
-            map.put("grant_type",grant_type);
-            map.put("redirect_uri",redirect_uri);
-            return map;
+            public Map getMapData(){
+                Map map = new HashMap();
+                map.put("code",code);
+                map.put("grant_type",grant_type);
+                map.put("redirect_uri",redirect_uri);
+                return map;
+            }
         }
+
+        @Data
+        public static class refrashToken{
+            private String refreshToken;
+            private String grant_type;
+
+            public Map getMapData(){
+                Map map = new HashMap();
+                map.put("refresh_token",refreshToken);
+                map.put("grant_type",grant_type);
+                return map;
+            }
+
+        }
+
+
 
     }
 

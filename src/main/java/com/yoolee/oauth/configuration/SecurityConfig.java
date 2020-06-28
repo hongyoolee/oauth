@@ -24,10 +24,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.authenticationProvider(customAuthenticationProvider);
     }
 
+
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
-                .authorizeRequests().antMatchers("/oauth/**","/oauth2/callback").permitAll()
+                .authorizeRequests()
+                .antMatchers("/oauth/**","/oauth2/callback").permitAll()
                 .and()
                 .formLogin()
                 .and()
