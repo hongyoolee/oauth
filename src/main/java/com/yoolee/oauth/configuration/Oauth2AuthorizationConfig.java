@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -14,6 +15,7 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
 import javax.sql.DataSource;
 
@@ -31,8 +33,8 @@ public class Oauth2AuthorizationConfig extends AuthorizationServerConfigurerAdap
     CustomUserDetailsService customUserDetailsService;
 
 
-    @Value("${security.oauth2.jwt.signkey}")
-    private String signKey;
+/*    @Value("${security.oauth2.jwt.signkey}")
+    private String signKey;*/
 
 
     // client id 별 redirect url 권한, 시크릿
@@ -61,11 +63,16 @@ public class Oauth2AuthorizationConfig extends AuthorizationServerConfigurerAdap
 
     @Bean
     public JwtAccessTokenConverter jwtAccessTokenConverter(){
+        // RSA 암호화
+        KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource("oauth2jwt.jks"), "13245941".toCharArray());
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-        converter.setSigningKey(signKey);
+        converter.setKeyPair(keyStoreKeyFactory.getKeyPair("oauth2jwt"));
+        // 대칭키 암호화
+     /*   JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+        converter.setSigningKey(signKey);*/
         return converter;
     }
-    // resource 서버에서 /oauth/check_token 보낼시 받기위해 필요(인증된 토큰인지 확인 필요.)
+    // resource 서버에서 /oauth/check_token 보낼시 받기위해 필요(인증된 토큰인지 확인 필요.) > jwt 토큰 사용시 필요 없음.
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
         security.tokenKeyAccess("permitAll()")

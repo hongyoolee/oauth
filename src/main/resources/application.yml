@@ -1,5 +1,14 @@
 server:
   port: 8089
+  tomcat:
+    accesslog:
+      enabled: true
+      pattern: common
+      suffix: .log
+      prefix: accesslog
+      file-date-format: .yyyy-MM-dd
+      directory: logs
+    basedir: .
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/oauth?serverTimezone=UTC&characterEncoding=UTF-8
@@ -14,11 +23,11 @@ spring:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     #hibernate:
       #ddl-auto: create
-# signKey 는 토큰을 암호화 복호화 할때 쓰는키로 계속 바뀌니 정의 해 준다.
 security:
   oauth2:
-    jwt:
-      signKey: 123@#$
-    resource:
-      jwt:
-        key-uri:
+    authorization:
+      token-key-access: isAuthenticated() # key 정보 얻어갈 수 있도록 함.
+#security:
+#  oauth2:
+#    jwt:
+#      signKey: 123@#$ signKey 는 토큰을 암호화 복호화 할때 쓰는키로 계속 바뀌니 정의 해 준다. (대칭키로 암호화 할시 사용)
