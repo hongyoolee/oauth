@@ -57,7 +57,7 @@ public class Oauth2AuthorizationConfig extends AuthorizationServerConfigurerAdap
         //jwt 토큰 자체에 인증정보가 있기에 따로 리소스 서버에서 token 유효 체크를 안해도 된다.
         // user detail service 를 넣은 이유는 리플레시 토큰 할시 유저 정보를 검색하기 위해..
         super.configure(endpoints);
-        endpoints.accessTokenConverter(jwtAccessTokenConverter())
+        endpoints.accessTokenConverter(jwtAccessTokenConverter()) // 해당 설정시 리소스 서버에서 /oauth/token_key시 암호화 key 정보를 읽어 온다.(리소스 서버에서 최초 한번만 기동시 읽어 온다)
                 .userDetailsService(customUserDetailsService);
     }
 
