@@ -29,10 +29,8 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-
         String username = authentication.getName();
         String password = (String) authentication.getCredentials();
-
         User user = userJpaRepo.findByUid(username);
 
         if(ObjectUtils.isEmpty(user)){
@@ -42,8 +40,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         if(!passwordEncoder.matches(password,user.getPassword())){
             throw new BadCredentialsException("password is not vaild");
         }
-
-        return new UsernamePasswordAuthenticationToken(username,password,user.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(username,password,authentication.getAuthorities());
 
     }
 }

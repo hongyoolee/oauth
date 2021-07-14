@@ -12,6 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class Oauth2Controller {
 
+    /***
+     * redirect url
+     * @param code
+     * @return
+     */
     @GetMapping("/callback")
     public OauthToken.response callback(@RequestParam String code){
 
@@ -34,6 +39,11 @@ public class Oauth2Controller {
         return oauthToken;
     }
 
+    /***
+     * refrash token 으로 토큰 재 발행
+     * @param refreshToken
+     * @return
+     */
     @GetMapping("/refresh")
     public OauthToken.response refresh(@RequestParam String refreshToken){
 
@@ -47,7 +57,8 @@ public class Oauth2Controller {
             setRefreshToken(refreshToken);
             setGrant_type("refresh_token");
         }};
-        OauthToken.response oauthToken = Unirest.post("http://localhost:8081/oauth/token")
+
+        OauthToken.response oauthToken = Unirest.post("http://localhost:8089/oauth/token")
                 .header("Authorization","Basic "+encodingCredentials)
                 .fields(request.getMapData())
                 .asObject(OauthToken.response.class).getBody();

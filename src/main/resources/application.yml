@@ -9,24 +9,21 @@ server:
       file-date-format: .yyyy-MM-dd
       directory: logs
     basedir: .
+# DB 설정
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/oauth?serverTimezone=UTC&characterEncoding=UTF-8
     username: root
     password: root@1234
-    #platform: oauth # resource 에 있는 schema.sql 을 실행
-    #initialization-mode: always # sql script 자동 실행
+    #initialization-mode: always # sql script 자동 실행 > resource 에 있는 schema.sql 을 실행 (기본값: always, 생성안함: never))
     driver-class-name: com.mysql.cj.jdbc.Driver
-  jpa:
+  jpa: # DB 쿼리 작성 없이 코드로 쉽게 데이터 처리를 위함.
     show-sql: true
     database: mysql
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     #hibernate:
       #ddl-auto: create
-security:
-  oauth2:
-    authorization:
-      token-key-access: isAuthenticated() # key 정보 얻어갈 수 있도록 함.
+
 #security:
 #  oauth2:
 #    jwt:
